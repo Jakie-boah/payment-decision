@@ -1,0 +1,15 @@
+
+TEST_DOCKER_COMPOSE := "docker compose -f tests/test.docker-compose.yml"
+
+test:
+  {{TEST_DOCKER_COMPOSE}} up -d && docker logs -f tests
+
+test-rebuild:
+  {{TEST_DOCKER_COMPOSE}} up -d --build && docker logs -f tests
+
+
+test-down:
+  {{TEST_DOCKER_COMPOSE}} down
+
+ruff:
+    ruff check src --fix
