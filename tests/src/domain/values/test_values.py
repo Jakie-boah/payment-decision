@@ -3,7 +3,7 @@ from decimal import Decimal
 from uuid import UUID
 
 from src.domain.values.number import Amount
-from src.domain.values.text import Description
+from src.domain.values.strings import Description, Webhook
 from src.domain.values.status import Status
 from src.domain.values.id import Id
 import pytest
@@ -116,3 +116,23 @@ def test_id(case, logger):
 
 def test_generate_id():
     assert Id.generate()
+
+
+@pytest.mark.parametrize(
+    "case",
+    (
+            Case(will_pass=False, value="pending"),
+            Case(will_pass=True, value="https://example.com"),
+            Case(will_pass=True, value="http://example.com"),
+
+    )
+)
+def test_webhook(logger, case):
+    if case.will_pass:
+        vo = Webhook(case.value)
+        assert vo
+        logger.info(vo)
+    else:
+        with pytest.raises(ValueError) as e:
+            Webhook(case.value)
+        logger.info(str(e.value))

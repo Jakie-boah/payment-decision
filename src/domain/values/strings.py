@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from urllib.parse import urlparse
 
 from src.domain.values.base import BaseValueObject
 
@@ -12,3 +13,13 @@ class Description(BaseValueObject):
     def validate(self):
         if len(self.value) > MAX_DESCRIPTION_LENGTH:
             raise ValueError("Description too long")
+
+
+@dataclass(frozen=True, slots=True)
+class Webhook(BaseValueObject):
+    value: str
+
+    def validate(self):
+        parsed = urlparse(self.value)
+        if not parsed.scheme or not parsed.netloc:
+            raise ValueError("Webhook URL must have scheme and netloc")
