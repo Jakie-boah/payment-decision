@@ -5,7 +5,7 @@ from uuid import UUID
 from src.domain.values.number import Amount
 from src.domain.values.strings import Description, Webhook
 from src.domain.values.status import Status
-from src.domain.values.id import Id
+from src.domain.values.id import Id, IdempotencyKey
 import pytest
 
 from dataclasses import dataclass
@@ -135,4 +135,24 @@ def test_webhook(logger, case):
     else:
         with pytest.raises(ValueError) as e:
             Webhook(case.value)
+        logger.info(str(e.value))
+
+
+
+@pytest.mark.parametrize(
+    "case",
+    (
+            Case(will_pass=True, value=uuid.uuid4()),
+            Case(will_pass=False, value="tetet"),
+
+    )
+)
+def test_idempotency_key(case, logger):
+    if case.will_pass:
+        vo = IdempotencyKey(case.value)
+        assert vo
+        logger.info(vo)
+    else:
+        with pytest.raises(ValueError) as e:
+            IdempotencyKey(case.value)
         logger.info(str(e.value))

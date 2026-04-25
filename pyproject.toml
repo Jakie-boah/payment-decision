@@ -26,6 +26,7 @@ addopts = "--cov=src --cov-report=html -v -s -vv --verbose --color=yes"
 
 [dependency-groups]
 dev = [
+    "faker>=40.15.0",
     "mypy>=1.20.1",
     "ruff>=0.15.11",
 ]

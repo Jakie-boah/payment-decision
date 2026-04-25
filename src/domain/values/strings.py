@@ -15,6 +15,11 @@ class Description(BaseValueObject):
             raise ValueError("Description too long")
 
 
+    @classmethod
+    def default(cls):
+        return Description("N/A")
+
+
 @dataclass(frozen=True, slots=True)
 class Webhook(BaseValueObject):
     value: str

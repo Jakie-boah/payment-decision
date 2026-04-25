@@ -9,7 +9,13 @@ async def use_case(container):
 
 
 @pytest.mark.asyncio
-async def test_create_payment_use_case(use_case, logger):
-    assert use_case
-    assert use_case.logger
-    logger.info(use_case)
+async def test_create_payment_use_case(
+        use_case,
+        new_payment_dto,
+        logger,
+):
+    result = await use_case(new_payment_dto)
+
+    assert result.payment_id
+    assert result.status
+    assert result.created_at

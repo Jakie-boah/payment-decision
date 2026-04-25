@@ -1,6 +1,9 @@
-from src.domain.values.id import Id
+from datetime import datetime, UTC
+
+from src.domain.values.id import Id, IdempotencyKey
 from src.domain.values.number import Amount
 from src.domain.values.currency import Currency
+from src.domain.values.status import Status
 from src.domain.values.strings import Webhook, Description
 
 
@@ -8,31 +11,45 @@ class Payment:
     def __init__(
             self,
             *,
+            idempotency_key: IdempotencyKey,
             amount: Amount,
             currency: Currency,
-            description: Description,
             webhook: Webhook,
-            uid: Id = None,
-            meta_data: dict | None = None,
 
+            uid: Id = None,
+            description: Description = None,
+            meta_data: dict | None = None,
     ):
         self._id = uid or Id.generate()
+        self._idempotency_key = idempotency_key
 
         self._amount = amount
         self._currency = currency
-        self._description = description
+        self._description = description or Description.default()
         self._webhook = webhook
         self._meta_data = meta_data
+
+        self._status: Status = Status.NOT_SET
+
+        self._created_at: datetime = datetime.now(UTC)
 
     @property
     def id(self):
         return self._id
 
+    @property
+    def status(self):
+        return self._status
+
+    @property
+    def created_at(self):
+        return self._created_at
+
     def mark_failed(self):
-        pass
+        self._status = Status.FAILED
 
     def mark_succeeded(self):
-        pass
+        self._status = Status.SUCCEEDED
 
     def mark_pending(self):
-        pass
+        self._status = Status.PENDING
