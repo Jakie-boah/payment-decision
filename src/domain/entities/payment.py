@@ -42,6 +42,30 @@ class Payment:
         return self._status
 
     @property
+    def idempotency_key(self):
+        return self._idempotency_key
+
+    @property
+    def amount(self):
+        return self._amount
+
+    @property
+    def currency(self):
+        return self._currency
+
+    @property
+    def webhook(self):
+        return self._webhook
+
+    @property
+    def description(self):
+        return self._description
+
+    @property
+    def meta_data(self):
+        return self._meta_data
+
+    @property
     def created_at(self):
         return self._created_at
 
@@ -53,3 +77,12 @@ class Payment:
 
     def mark_pending(self):
         self._status = Status.PENDING
+
+    def get_payment_screen(self):
+        return {
+            "payment_id": self.id.as_generic(),
+            "amount": self._amount.as_generic(),
+            "currency": self._currency,
+            "status": self.status,
+            "created_at": str(self.created_at),
+        }

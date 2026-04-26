@@ -12,7 +12,7 @@ services:
 
     entrypoint:
       sh -c "
-      uv run pytest tests/src
+      uv run pytest tests/src/
       "
 
   test-postgres:

@@ -39,5 +39,6 @@ pytest_plugins = [
     "tests.fixtures.postgres",
     "tests.fixtures.ioc_container",
     "tests.fixtures.payment_dto",
+    "tests.fixtures.domain_entities",
 
 ]

@@ -21,6 +21,9 @@ class Id(BaseValueObject):
     def generate(cls):
         return Id(uuid4())
 
+    def as_generic(self):
+        return str(self.value)
+
 
 @dataclass(frozen=True, slots=True)
 class IdempotencyKey(BaseValueObject):
@@ -34,3 +37,6 @@ class IdempotencyKey(BaseValueObject):
             UUID(str(self.value))
         except ValueError:
             raise ValueError("IdempotencyKey must be correct")
+
+    def as_generic(self):
+        return str(self.value)

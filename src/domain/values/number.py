@@ -17,3 +17,10 @@ class Amount(BaseValueObject):
 
         if abs(self.value.as_tuple().exponent) > 2:
             raise ValueError("Too many decimal places")
+
+        integer_part = abs(int(self.value))
+        if len(str(integer_part)) > 13:
+            raise ValueError("Integer part must have at most 13 digits")
+
+    def as_generic(self):
+        return str(self.value)
