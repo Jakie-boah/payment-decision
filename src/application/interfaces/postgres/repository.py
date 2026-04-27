@@ -4,4 +4,5 @@ from src.domain.entities.payment import Payment
 
 class Repository(ABC):
     @abstractmethod
-    def save(self, payment: Payment): ...
+    async def save(self, payment: Payment): ...
+

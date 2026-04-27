@@ -19,6 +19,7 @@ class Payment:
             uid: Id = None,
             description: Description = None,
             meta_data: dict | None = None,
+            created_at: datetime = None,
     ):
         self._id = uid or Id.generate()
         self._idempotency_key = idempotency_key
@@ -31,7 +32,7 @@ class Payment:
 
         self._status: Status = Status.NOT_SET
 
-        self._created_at: datetime = datetime.now(UTC)
+        self._created_at: datetime = created_at or datetime.now(UTC)
 
     @property
     def id(self):

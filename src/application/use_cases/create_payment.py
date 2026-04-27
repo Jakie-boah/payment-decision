@@ -19,13 +19,17 @@ class CreatePaymentUseCase:
         payment: Payment = map_payment_from_dto(payload)
         payment.mark_pending()
 
-        await self.uow.outbox.save(payment)
-        await self.uow.payment.save(payment)
+        stored_payment = await self.uow.payment.save(payment)
+
+        is_new = stored_payment.id == payment.id
+
+        if is_new:
+            await self.uow.outbox.save(payment)
 
         await self.uow.commit()
 
         return Result(
-            payment_id=payment.id,
-            status=payment.status,
-            created_at=payment.created_at
+            payment_id=stored_payment.id,
+            status=stored_payment.status,
+            created_at=stored_payment.created_at
         )

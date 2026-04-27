@@ -24,6 +24,9 @@ class Id(BaseValueObject):
     def as_generic(self):
         return str(self.value)
 
+    def __eq__(self, other):
+        return self.as_generic() == other.as_generic()
+
 
 @dataclass(frozen=True, slots=True)
 class IdempotencyKey(BaseValueObject):
