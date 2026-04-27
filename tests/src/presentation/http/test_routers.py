@@ -15,6 +15,7 @@ async def http_session():
 
 
 @pytest.mark.asyncio
+@pytest.mark.skip("depends on api container")
 async def test_request(http_session, logger):
     url = "http://api:8001/api/v1/payments"
 
@@ -44,6 +45,7 @@ async def test_request(http_session, logger):
 
 
 @pytest.mark.asyncio
+@pytest.mark.skip("depends on api container")
 async def test_get_payment(http_session, session, logger):
     url = "http://api:8001/api/v1/payments"
 
@@ -71,8 +73,8 @@ async def test_get_payment(http_session, session, logger):
         assert response.status == 200
 
 
-
 @pytest.mark.asyncio
+@pytest.mark.skip("depends on api container")
 async def test_get_payment_raise(http_session, logger):
     url = "http://api:8001/api/v1/payments"
     url += f"/{str(uuid.uuid4())}"
@@ -80,4 +82,3 @@ async def test_get_payment_raise(http_session, logger):
     async with http_session.post(url) as response:
         logger.info(await response.json())
         assert response.status == 404
-

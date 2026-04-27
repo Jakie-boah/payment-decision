@@ -13,7 +13,7 @@ def repo(session):
 @pytest.mark.asyncio
 async def test_outbox_repo(repo, session, payment, logger):
     payment.mark_pending()
-    await repo.save(payment)
+    await repo.save(payment.generate_outbox())
     await session.commit()
 
     row = await session.execute(
@@ -23,3 +23,14 @@ async def test_outbox_repo(repo, session, payment, logger):
     result = row.mappings().one()
     assert result
     logger.info(result)
+
+
+@pytest.mark.asyncio
+async def test_filter_outbox(repo, payment, session, logger):
+    payment.mark_pending()
+    await repo.save(payment.generate_outbox())
+    await session.commit()
+
+    result = await repo.filter()
+    logger.info(result)
+

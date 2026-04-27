@@ -2,9 +2,9 @@ import pytest_asyncio
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from src.infrastructure.postgres.tables import metadata
+from src.infrastructure.postgres.uow import ImplUnitOfWork
 
-
-# from src.infrastructure.postgres.uow import ImplUnitOfWork
+import pytest
 
 
 @pytest_asyncio.fixture(scope="session")
@@ -37,3 +37,8 @@ async def session(engine):
     )
     async with async_session() as session:
         yield session
+
+
+@pytest.fixture(scope="function")
+def uow(session):
+    return ImplUnitOfWork(session)

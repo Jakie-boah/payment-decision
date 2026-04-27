@@ -1,8 +1,15 @@
 from abc import ABC, abstractmethod
-from src.domain.entities.payment import Payment
+from typing import Generic, TypeVar
+
+T = TypeVar("T")
 
 
-class Repository(ABC):
+class Repository(ABC, Generic[T]):
     @abstractmethod
-    async def save(self, payment: Payment): ...
+    async def save(self, domain: T): ...
 
+    @abstractmethod
+    async def filter(self) -> list[T]: ...
+
+    @abstractmethod
+    async def update(self, domain: T): ...

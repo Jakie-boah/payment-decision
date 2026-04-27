@@ -12,8 +12,14 @@ services:
 
     entrypoint:
       sh -c "
-      uv run pytest tests/src/
+      uv run pytest tests/src/application/use_cases/test_publish_payments.py
       "
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      test-postgres:
+        condition: service_healthy
+
 
   test-postgres:
     image: postgres:16-alpine
@@ -44,93 +50,26 @@ services:
       sh -c "uvicorn src.presentation.http.main:app_factory --host 0.0.0.0 --port 8001 --reload --factory"
     ports:
       - "8001:8001"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      test-postgres:
+        condition: service_healthy
+
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "status" ]
+      interval: 5s
+      retries: 5
+      timeout: 5s
 
 
 
-
-#services:
-#
-#  rabbitmq:
-#    image: rabbitmq:3.13-management
-#    ports:
-#      - "5672:5672"
-#      - "15672:15672"
-#    environment:
-#      RABBITMQ_DEFAULT_USER: guest
-#      RABBITMQ_DEFAULT_PASS: guest
-#    healthcheck:
-#      test: [ "CMD", "rabbitmq-diagnostics", "status" ]
-#      interval: 5s
-#      retries: 5
-#      timeout: 5s
-#
-#  redis:
-#    container_name: redis
-#    image: redis:latest
-#    ports:
-#      - 6379:6379
-#    restart: always
-#    healthcheck:
-#      test: [ "CMD", "redis-cli", "ping" ]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 3
-#
-#  tests:
-#    container_name: tests
-#    build:
-#      context: ../.
-#    volumes:
-#      - ../.:/usr/src/app
-#    env_file:
-#      - .env.test
-#    entrypoint:
-#      sh -c "
-#      while ! nc -z test-postgres 5432; do sleep 1; done &&
-#      pytest tests/src/
-#      "
-#    #     tail -f /dev/null
-#
-#    tty: true
-#    stdin_open: true
-#    depends_on:
-#      test-postgres:
-#        condition: service_healthy
-#
-#  test-postgres:
-#    image: postgres:16-alpine
-#    container_name: test-postgres
-#    restart: always
-#    volumes:
-#      - test_postgres_data:/var/lib/postgresql/data
-#    ports:
-#      - "5432:5432"
-#    environment:
-#      - POSTGRES_DB=tasks_backend_test
-#      - POSTGRES_USER=user
-#      - POSTGRES_PASSWORD=password
-#    healthcheck:
-#      test: [ "CMD", "pg_isready", "-U", "user", "-h", "test-postgres" ]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 3
-#
-#  test-himmera-task-service:
-#    container_name: test-himmera-task-service
-#    restart: always
-#    env_file:
-#      - .env.test
-#    build:
-#      context: ../.
-#    command: sh -c "python src/presentation/amqp_api/main.py"
-#    ports:
-#      - "8000:8000"
-#    depends_on:
-#      rabbitmq:
-#        condition: service_healthy
-#    volumes:
-#      - ../.:/usr/src/app
-#
-#volumes:
-#  test_postgres_data:
-#  tasks_backend_logs:

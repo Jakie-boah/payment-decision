@@ -13,4 +13,5 @@ def load_config_from_env() -> Config:
 def _create_config() -> Config:
     return Config(
         db_dsn=os.environ["DB_DSN"],
+        rabbitmq=os.environ["RABBITMQ"],
     )

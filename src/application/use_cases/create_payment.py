@@ -28,7 +28,7 @@ class CreatePaymentUseCase:
         is_new = stored_payment.id == payment.id
         self.logger.info(is_new)
         if is_new:
-            await self.uow.outbox.save(payment)
+            await self.uow.outbox.save(payment.generate_outbox())
         self.logger.info("все сохранил")
 
         await self.uow.commit()

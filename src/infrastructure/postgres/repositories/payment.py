@@ -1,4 +1,4 @@
-from src.application.interfaces.postgres.repository import Repository
+from src.application.interfaces.postgres.repository import Repository, T
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.domain.entities.payment import Payment
 from src.domain.values.currency import Currency
@@ -10,7 +10,7 @@ from sqlalchemy.dialects.postgresql import insert as pg_insert
 from src.domain.values.id import Id, IdempotencyKey
 
 
-class PaymentPostgresRepository(Repository):
+class PaymentPostgresRepository(Repository[Payment]):
     def __init__(self, session: AsyncSession):
         self.session = session
 
@@ -51,3 +51,9 @@ class PaymentPostgresRepository(Repository):
             status=Status(row.status),
             created_at=row.created_at,
         )
+
+    async def filter(self) -> list[Payment]:
+        raise NotImplementedError
+
+    async def update(self, domain: Payment):
+        raise NotImplementedError

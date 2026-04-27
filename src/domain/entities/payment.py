@@ -1,5 +1,6 @@
 from datetime import datetime, UTC
 
+from src.domain.entities.outbox import Outbox
 from src.domain.values.id import Id, IdempotencyKey
 from src.domain.values.number import Amount
 from src.domain.values.currency import Currency
@@ -80,7 +81,16 @@ class Payment:
     def mark_pending(self):
         self._status = Status.PENDING
 
-    def get_payment_screen(self):
+    def generate_outbox(self) -> Outbox:
+        return Outbox(
+            aggregate_id=self.id,
+            idempotency_key=self.idempotency_key,
+            event_type=self.status,
+            payload=self._get_payment_screen(),
+            created_at=self.created_at,
+        )
+
+    def _get_payment_screen(self):
         return {
             "payment_id": self.id.as_generic(),
             "amount": self._amount.as_generic(),
