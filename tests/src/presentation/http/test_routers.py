@@ -4,6 +4,8 @@ import aiohttp
 
 import pytest_asyncio
 import pytest
+from src.infrastructure.postgres.tables import payments_table
+from sqlalchemy import select
 
 
 @pytest_asyncio.fixture
@@ -39,3 +41,43 @@ async def test_request(http_session, logger):
         assert response.status == 200
 
     assert data1 == data2
+
+
+@pytest.mark.asyncio
+async def test_get_payment(http_session, session, logger):
+    url = "http://api:8001/api/v1/payments"
+
+    header = {
+        "Idempotency-Key": str(uuid.uuid4()),
+    }
+
+    data = {
+        "amount": 100,
+        "currency": "EUR",
+        "webhook_url": "https://example.com",
+        "meta_data": None,
+        "description": "some"
+    }
+
+    async with http_session.post(url, headers=header, json=data) as response:
+        await response.json()
+
+    rows = await session.execute(select(payments_table.c.id))
+    first = rows.mappings().first()
+    url += f"/{str(first.id)}"
+
+    async with http_session.post(url) as response:
+        logger.info(await response.json())
+        assert response.status == 200
+
+
+
+@pytest.mark.asyncio
+async def test_get_payment_raise(http_session, logger):
+    url = "http://api:8001/api/v1/payments"
+    url += f"/{str(uuid.uuid4())}"
+
+    async with http_session.post(url) as response:
+        logger.info(await response.json())
+        assert response.status == 404
+

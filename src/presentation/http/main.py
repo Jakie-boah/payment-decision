@@ -1,7 +1,7 @@
 from dishka import make_async_container, AsyncContainer
 from fastapi import FastAPI
 from dishka.integrations.fastapi import setup_dishka
-
+from src.presentation.http.handlers import register_exception_handlers
 from src.infrastructure.config.config_loader import load_config_from_env
 from src.infrastructure.ioc_container import UseCaseProvider, LoggerProvider, SessionProvider
 
@@ -29,6 +29,9 @@ def create_app() -> FastAPI:
         return {"status": "ok"}
 
     app.include_router(router)
+
+    register_exception_handlers(app)
+
     return app
 
 

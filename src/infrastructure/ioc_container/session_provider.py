@@ -8,7 +8,9 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
+from src.application.interfaces.postgres.reader import PaymentReader
 from src.infrastructure.config.config_storage import Config
+from src.infrastructure.postgres.reader.payment import ImplPaymentReader
 from src.infrastructure.postgres.uow import ImplUnitOfWork
 from src.application.interfaces.postgres.uow import UnitOfWork
 
@@ -45,3 +47,7 @@ class SessionProvider(Provider):
     @provide(scope=Scope.REQUEST)
     async def get_uow_instance(self, session: AsyncSession) -> UnitOfWork:
         return ImplUnitOfWork(session=session)
+
+    @provide(scope=Scope.REQUEST)
+    async def get_reader(self, session: AsyncSession) -> PaymentReader:
+        return ImplPaymentReader(session=session)
