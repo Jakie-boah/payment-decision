@@ -20,6 +20,7 @@ class Payment:
             description: Description = None,
             meta_data: dict | None = None,
             created_at: datetime = None,
+            status: Status = Status.NOT_SET,
     ):
         self._id = uid or Id.generate()
         self._idempotency_key = idempotency_key
@@ -30,7 +31,7 @@ class Payment:
         self._webhook = webhook
         self._meta_data = meta_data
 
-        self._status: Status = Status.NOT_SET
+        self._status: Status = status
 
         self._created_at: datetime = created_at or datetime.now(UTC)
 

@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.domain.entities.payment import Payment
 from src.domain.values.currency import Currency
 from src.domain.values.number import Amount
+from src.domain.values.status import Status
 from src.domain.values.strings import Webhook, Description
 from src.infrastructure.postgres.tables import payments_table
 from sqlalchemy.dialects.postgresql import insert as pg_insert
@@ -47,5 +48,6 @@ class PaymentPostgresRepository(Repository):
             webhook=Webhook(row.webhook),
             description=Description(row.description),
             meta_data=row.meta_data,
+            status=Status(row.status),
             created_at=row.created_at,
         )

@@ -1,8 +1,15 @@
 import pytest
 import pytest_asyncio
+
+from src.application.dto.payment import NewPayment
 from src.application.use_cases.create_payment import CreatePaymentUseCase
 from sqlalchemy import func, select
 from src.infrastructure.postgres.tables import payments_table, outbox_table
+import uuid
+from src.application.dto.payment import NewPayment
+from decimal import Decimal
+import pytest
+from src.domain.values.currency import Currency
 
 
 @pytest_asyncio.fixture
@@ -13,12 +20,18 @@ async def use_case(container):
 @pytest.mark.asyncio
 async def test_create_payment_use_case(
         use_case,
-        new_payment_dto,
 ):
+    new_payment_dto = NewPayment(
+        amount=Decimal(100),
+        currency=Currency.EUR,
+        webhook_url="https://example.com",
+        meta_data=None,
+        idempotency_key=uuid.uuid4()
+    )
     result = await use_case(new_payment_dto)
 
     assert result.payment_id
-    assert result.status
+    assert result.status == "pending"
     assert result.created_at
 
 
@@ -43,4 +56,3 @@ async def test_create_payment_and_check_idempotent(
     )
     o_count = rows.scalar_one()
     assert o_count == 1
-
