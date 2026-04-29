@@ -1,11 +1,11 @@
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 
 from src.domain.entities.outbox import Outbox
+from src.domain.values.currency import Currency
 from src.domain.values.id import Id, IdempotencyKey
 from src.domain.values.number import Amount
-from src.domain.values.currency import Currency
 from src.domain.values.status import Status
-from src.domain.values.strings import Webhook, Description
+from src.domain.values.strings import Description, Webhook
 
 
 class Payment:
@@ -35,6 +35,7 @@ class Payment:
         self._status: Status = status
 
         self._created_at: datetime = created_at or datetime.now(UTC)
+        self.__outbox = None
 
     @property
     def id(self):
@@ -81,14 +82,18 @@ class Payment:
     def mark_pending(self):
         self._status = Status.PENDING
 
-    def generate_outbox(self) -> Outbox:
-        return Outbox(
+    def get_outbox(self) -> Outbox:
+        # if self.__outbox:
+        #     return self.__outbox
+
+        self.__outbox = Outbox(
             aggregate_id=self.id,
             idempotency_key=self.idempotency_key,
             event_type=self.status,
             payload=self._get_payment_screen(),
             created_at=self.created_at,
         )
+        return self.__outbox
 
     def _get_payment_screen(self):
         return {

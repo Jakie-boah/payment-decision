@@ -1,6 +1,7 @@
-import structlog
-from dishka import Scope, Provider, provide
 import logging
+
+import structlog
+from dishka import Provider, Scope, provide
 
 
 class LoggerProvider(Provider):

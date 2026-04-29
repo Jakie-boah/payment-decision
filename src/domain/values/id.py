@@ -1,7 +1,7 @@
+from dataclasses import dataclass
 from uuid import UUID, uuid4
 
 from src.domain.values.base import BaseValueObject
-from dataclasses import dataclass
 
 
 @dataclass(frozen=True, slots=True)

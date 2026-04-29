@@ -12,7 +12,7 @@ services:
 
     entrypoint:
       sh -c "
-      uv run pytest tests/src/application/use_cases/test_publish_payments.py
+      uv run pytest tests/src/
       "
     depends_on:
       rabbitmq:
@@ -47,7 +47,7 @@ services:
     build:
       context: ../.
     command: >
-      sh -c "uvicorn src.presentation.http.main:app_factory --host 0.0.0.0 --port 8001 --reload --factory"
+      sh -c "uvicorn src.presentation.http_api.main:app_factory --host 0.0.0.0 --port 8001 --reload --factory"
     ports:
       - "8001:8001"
     depends_on:
@@ -56,6 +56,23 @@ services:
       test-postgres:
         condition: service_healthy
 
+  outbox:
+    container_name: outbox
+    env_file:
+      - .env.test
+    volumes:
+      - ../.:/app
+
+    build:
+      context: ../.
+
+    command: >
+      sh -c "uv run python -m src.presentation.outbox.main"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      test-postgres:
+        condition: service_healthy
 
   rabbitmq:
     image: rabbitmq:3.13-management
@@ -71,5 +88,21 @@ services:
       retries: 5
       timeout: 5s
 
+  amqp-api:
+    container_name: amqp-api
+    env_file:
+      - .env.test
+    volumes:
+      - ../.:/app
 
+    build:
+      context: ../.
 
+    command: >
+      sh -c "uv run python -m src.presentation.amqp_api.main"
+
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      test-postgres:
+        condition: service_healthy

@@ -1,6 +1,7 @@
-from src.domain.values.status import Status
-import pytest
 from datetime import datetime
+
+import pytest
+from src.domain.values.status import Status
 
 
 def test_payment_date_field(payment):

@@ -1,15 +1,13 @@
+import uuid
+from decimal import Decimal
+
 import pytest
 import pytest_asyncio
-
+from sqlalchemy import func, select
 from src.application.dto.payment import NewPayment
 from src.application.use_cases.create_payment import CreatePaymentUseCase
-from sqlalchemy import func, select
-from src.infrastructure.postgres.tables import payments_table, outbox_table
-import uuid
-from src.application.dto.payment import NewPayment
-from decimal import Decimal
-import pytest
 from src.domain.values.currency import Currency
+from src.infrastructure.postgres.tables import outbox_table, payments_table
 
 
 @pytest_asyncio.fixture

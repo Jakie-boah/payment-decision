@@ -1,18 +1,7 @@
 import uuid
 
-from sqlalchemy import (
-    func,
-    JSON,
-    TIMESTAMP,
-    UUID,
-    BigInteger,
-    Column,
-    MetaData,
-    String,
-    Table,
-    DECIMAL,
-    Index
-)
+from sqlalchemy import DECIMAL, JSON, TIMESTAMP, UUID, BigInteger, Column, Index, MetaData, String, Table, func
+
 
 metadata = MetaData()
 

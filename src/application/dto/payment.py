@@ -1,9 +1,10 @@
 from dataclasses import dataclass
+from datetime import datetime
 from decimal import Decimal
 from uuid import UUID
+
 from src.domain.values.currency import Currency
 from src.domain.values.status import Status
-from datetime import datetime
 
 
 @dataclass(slots=True, frozen=True)

@@ -38,7 +38,7 @@ pytest_plugins = [
     "tests.fixtures.config",
     "tests.fixtures.postgres",
     "tests.fixtures.ioc_container",
-    "tests.fixtures.payment_dto",
+    "tests.fixtures.payment",
     "tests.fixtures.domain_entities",
 
 ]

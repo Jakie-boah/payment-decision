@@ -1,14 +1,13 @@
 import uuid
+from dataclasses import dataclass
 from decimal import Decimal
 from uuid import UUID
 
-from src.domain.values.number import Amount
-from src.domain.values.strings import Description, Webhook
-from src.domain.values.status import Status
-from src.domain.values.id import Id, IdempotencyKey
 import pytest
-
-from dataclasses import dataclass
+from src.domain.values.id import Id, IdempotencyKey
+from src.domain.values.number import Amount
+from src.domain.values.status import Status
+from src.domain.values.strings import Description, Webhook
 
 
 @dataclass(slots=True)
@@ -30,7 +29,7 @@ class Case:
             ),
             Case(
                 will_pass=False,
-                value=Decimal("0"),
+                value=Decimal(0),
             ),
             Case(
                 will_pass=False,

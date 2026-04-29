@@ -1,10 +1,12 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from src.domain.values.id import Id
-from src.application.interfaces.postgres.reader import PaymentReader, Payment
-from src.infrastructure.postgres.tables import payments_table
-from sqlalchemy import select
-from src.infrastructure.postgres.exceptions import PaymentNotFoundError
 from typing import cast
+
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.application.interfaces.postgres.reader import Payment, PaymentReader
+from src.domain.values.id import Id
+from src.infrastructure.postgres.exceptions import PaymentNotFoundError
+from src.infrastructure.postgres.tables import payments_table
 
 
 class ImplPaymentReader(PaymentReader):

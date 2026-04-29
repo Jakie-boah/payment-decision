@@ -1,12 +1,18 @@
-from dishka import make_async_container, AsyncContainer
-from fastapi import FastAPI
+from dishka import AsyncContainer, make_async_container
 from dishka.integrations.fastapi import setup_dishka
-from src.presentation.http.handlers import register_exception_handlers
-from src.infrastructure.config.config_loader import load_config_from_env
-from src.infrastructure.ioc_container import UseCaseProvider, LoggerProvider, SessionProvider, RabbitProvider
+from fastapi import FastAPI
 
+from src.infrastructure.config.config_loader import load_config_from_env
 from src.infrastructure.config.config_storage import Config
-from src.presentation.http.routers import router
+from src.infrastructure.ioc_container import (
+    LoggerProvider,
+    PaymentProvider,
+    RabbitProvider,
+    SessionProvider,
+    UseCaseProvider,
+)
+from src.presentation.http_api.handlers import register_exception_handlers
+from src.presentation.http_api.routers import router
 
 
 def create_container(config: Config) -> AsyncContainer:
@@ -14,6 +20,7 @@ def create_container(config: Config) -> AsyncContainer:
         LoggerProvider(),
         SessionProvider(),
         RabbitProvider(),
+        PaymentProvider(),
         UseCaseProvider(),
         context={Config: config}
     )

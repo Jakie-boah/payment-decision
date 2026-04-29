@@ -1,11 +1,12 @@
-import pytest_asyncio
-from src.application.use_cases.publish_payments import PublishPaymentsUseCase
-from src.application.use_cases.create_payment import CreatePaymentUseCase
-from src.application.dto.payment import NewPayment
-from decimal import Decimal
-import pytest
-from src.domain.values.currency import Currency
 import uuid
+from decimal import Decimal
+
+import pytest
+import pytest_asyncio
+from src.application.dto.payment import NewPayment
+from src.application.use_cases.create_payment import CreatePaymentUseCase
+from src.application.use_cases.publish_payments import PublishPaymentsUseCase
+from src.domain.values.currency import Currency
 
 
 @pytest_asyncio.fixture

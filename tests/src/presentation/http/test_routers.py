@@ -1,11 +1,10 @@
 import uuid
 
 import aiohttp
-
-import pytest_asyncio
 import pytest
-from src.infrastructure.postgres.tables import payments_table
+import pytest_asyncio
 from sqlalchemy import select
+from src.infrastructure.postgres.tables import payments_table
 
 
 @pytest_asyncio.fixture
@@ -15,7 +14,7 @@ async def http_session():
 
 
 @pytest.mark.asyncio
-@pytest.mark.skip("depends on api container")
+# @pytest.mark.skip("depends on api container")
 async def test_request(http_session, logger):
     url = "http://api:8001/api/v1/payments"
 
@@ -45,7 +44,7 @@ async def test_request(http_session, logger):
 
 
 @pytest.mark.asyncio
-@pytest.mark.skip("depends on api container")
+# @pytest.mark.skip("depends on api container")
 async def test_get_payment(http_session, session, logger):
     url = "http://api:8001/api/v1/payments"
 
@@ -66,7 +65,7 @@ async def test_get_payment(http_session, session, logger):
 
     rows = await session.execute(select(payments_table.c.id))
     first = rows.mappings().first()
-    url += f"/{str(first.id)}"
+    url += f"/{first.id!s}"
 
     async with http_session.post(url) as response:
         logger.info(await response.json())
@@ -74,10 +73,10 @@ async def test_get_payment(http_session, session, logger):
 
 
 @pytest.mark.asyncio
-@pytest.mark.skip("depends on api container")
+# @pytest.mark.skip("depends on api container")
 async def test_get_payment_raise(http_session, logger):
     url = "http://api:8001/api/v1/payments"
-    url += f"/{str(uuid.uuid4())}"
+    url += f"/{uuid.uuid4()!s}"
 
     async with http_session.post(url) as response:
         logger.info(await response.json())

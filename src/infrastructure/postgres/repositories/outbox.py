@@ -1,11 +1,12 @@
-from src.application.interfaces.postgres.repository import Repository
+from sqlalchemy import select, update
+from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.application.interfaces.postgres.repository import Repository
 from src.domain.entities.outbox import Outbox
-from src.domain.values.id import IdempotencyKey, Id
+from src.domain.values.id import Id, IdempotencyKey
 from src.domain.values.status import Status
 from src.infrastructure.postgres.tables import outbox_table
-from sqlalchemy.dialects.postgresql import insert as pg_insert
-from sqlalchemy import select, update
 
 
 class OutboxPostgresRepository(Repository[Outbox]):
@@ -22,10 +23,6 @@ class OutboxPostgresRepository(Repository[Outbox]):
                 idempotency_key=outbox.idempotency_key.value,
                 created_at=outbox.created_at,
                 processed_at=outbox.processed_at,
-            )
-            .on_conflict_do_update(
-                index_elements=["id"],
-                set_={"processed_at": outbox.processed_at}
             )
         )
         await self.session.execute(stmt)
@@ -67,3 +64,6 @@ class OutboxPostgresRepository(Repository[Outbox]):
             .values(processed_at=outbox.processed_at)
         )
         await self.session.execute(stmt)
+
+    async def get(self, uid: Id) -> Outbox:
+        raise NotImplementedError

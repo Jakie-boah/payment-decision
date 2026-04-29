@@ -15,16 +15,6 @@ RUN uv sync --frozen
 COPY . .
 RUN uv sync --frozen
 
-# --- runtime stage ---
-#FROM python:3.13-slim
-#
-#WORKDIR /app
-#
-#COPY --from=builder /usr/local/bin/uv /usr/local/bin/uv
-#COPY --from=builder /root/.local /root/.local
-#COPY --from=builder /app /app
-#
-#ENV PATH="/root/.local/bin:$PATH"
 FROM python:3.13-slim
 
 WORKDIR /app

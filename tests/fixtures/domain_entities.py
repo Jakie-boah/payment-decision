@@ -1,10 +1,11 @@
-from src.domain.entities.payment import Payment
-from src.domain.values.id import IdempotencyKey
 import pytest
 from faker import Faker
-from src.domain.values.number import Amount
+from src.domain.entities.payment import Payment
 from src.domain.values.currency import Currency
+from src.domain.values.id import IdempotencyKey
+from src.domain.values.number import Amount
 from src.domain.values.strings import Webhook
+
 
 fake = Faker()
 

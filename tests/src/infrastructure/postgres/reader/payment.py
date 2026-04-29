@@ -1,17 +1,16 @@
-from src.infrastructure.postgres.reader.payment import ImplPaymentReader
-import pytest_asyncio
-
-from src.application.use_cases.create_payment import CreatePaymentUseCase
 import uuid
-from src.application.dto.payment import NewPayment
 from decimal import Decimal
-import pytest
-from src.domain.values.currency import Currency
-from src.infrastructure.postgres.tables import payments_table
-from sqlalchemy import select
-from src.infrastructure.postgres.exceptions import PaymentNotFoundError
 
+import pytest
+import pytest_asyncio
+from sqlalchemy import select
+from src.application.dto.payment import NewPayment
+from src.application.use_cases.create_payment import CreatePaymentUseCase
+from src.domain.values.currency import Currency
 from src.domain.values.id import Id
+from src.infrastructure.postgres.exceptions import PaymentNotFoundError
+from src.infrastructure.postgres.reader.payment import ImplPaymentReader
+from src.infrastructure.postgres.tables import payments_table
 
 
 @pytest_asyncio.fixture
@@ -49,7 +48,7 @@ async def test_get_payment(session, create_payment):
 
 
 @pytest.mark.asyncio
-async def test_get_payment_raise(session, ):
+async def test_get_payment_raise(session ):
     reader = ImplPaymentReader(session)
 
     with pytest.raises(PaymentNotFoundError):

@@ -1,13 +1,13 @@
-from src.application.interfaces.postgres.repository import Repository, T
-from sqlalchemy.ext.asyncio import AsyncSession
-from src.domain.entities.payment import Payment
-from src.domain.values.currency import Currency
-from src.domain.values.number import Amount
-from src.domain.values.status import Status
-from src.domain.values.strings import Webhook, Description
-from src.infrastructure.postgres.tables import payments_table
+from sqlalchemy import select, update
 from sqlalchemy.dialects.postgresql import insert as pg_insert
-from src.domain.values.id import Id, IdempotencyKey
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.application.interfaces.postgres.repository import Repository
+from src.domain.entities.payment import Payment
+from src.domain.mapper import map_payment_from_db
+from src.domain.values.id import Id
+from src.infrastructure.postgres.exceptions import PaymentNotFoundError
+from src.infrastructure.postgres.tables import payments_table
 
 
 class PaymentPostgresRepository(Repository[Payment]):
@@ -40,20 +40,29 @@ class PaymentPostgresRepository(Repository[Payment]):
         result = await self.session.execute(stmt)
         row = result.mappings().first()
 
-        return Payment(
-            uid=Id(row.id),
-            idempotency_key=IdempotencyKey(row.idempotency_key),
-            amount=Amount(row.amount),
-            currency=Currency(row.currency),
-            webhook=Webhook(row.webhook),
-            description=Description(row.description),
-            meta_data=row.meta_data,
-            status=Status(row.status),
-            created_at=row.created_at,
+        return map_payment_from_db(row)
+
+    async def get(self, uid: Id) -> Payment:
+        rows = await self.session.execute(
+            select(payments_table).where(payments_table.c.id == uid.value)
         )
+        payment = rows.mappings().first()
+
+        if not payment:
+            raise PaymentNotFoundError()
+
+        return map_payment_from_db(payment)
 
     async def filter(self) -> list[Payment]:
         raise NotImplementedError
 
     async def update(self, domain: Payment):
-        raise NotImplementedError
+        await self.session.execute(
+            update(payments_table).where(payments_table.c.id == domain.id.value)
+            .values(
+                webhook=domain.webhook.value,
+                description=domain.description.value,
+                meta_data=domain.meta_data,
+                status=domain.status,
+            )
+        )

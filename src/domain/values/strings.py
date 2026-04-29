@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 
 from src.domain.values.base import BaseValueObject
 
+
 MAX_DESCRIPTION_LENGTH = 500
 
 

@@ -1,8 +1,7 @@
 from datetime import datetime
-from typing import Protocol, TypedDict
-
-from uuid import UUID
 from decimal import Decimal
+from typing import Protocol, TypedDict
+from uuid import UUID
 
 from src.domain.values.currency import Currency
 from src.domain.values.id import Id

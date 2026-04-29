@@ -1,7 +1,7 @@
+from dataclasses import dataclass
 from decimal import Decimal
 
 from src.domain.values.base import BaseValueObject
-from dataclasses import dataclass
 
 
 @dataclass(frozen=True, slots=True)

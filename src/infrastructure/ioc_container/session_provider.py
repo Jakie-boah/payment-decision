@@ -9,10 +9,10 @@ from sqlalchemy.ext.asyncio import (
 )
 
 from src.application.interfaces.postgres.reader import PaymentReader
+from src.application.interfaces.postgres.uow import UnitOfWork
 from src.infrastructure.config.config_storage import Config
 from src.infrastructure.postgres.reader.payment import ImplPaymentReader
 from src.infrastructure.postgres.uow import ImplUnitOfWork
-from src.application.interfaces.postgres.uow import UnitOfWork
 
 
 class SessionProvider(Provider):
