@@ -29,6 +29,6 @@ class ImplPaymentReader(PaymentReader):
         result = rows.mappings().first()
 
         if not result:
-            raise PaymentNotFoundError()
+            raise PaymentNotFoundError
 
         return cast("Payment", dict(result))

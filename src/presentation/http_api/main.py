@@ -9,6 +9,7 @@ from src.infrastructure.ioc_container import (
     PaymentProvider,
     RabbitProvider,
     SessionProvider,
+    AioHttpProvider,
     UseCaseProvider,
 )
 from src.presentation.http_api.handlers import register_exception_handlers
@@ -21,7 +22,9 @@ def create_container(config: Config) -> AsyncContainer:
         SessionProvider(),
         RabbitProvider(),
         PaymentProvider(),
+        AioHttpProvider(),
         UseCaseProvider(),
+
         context={Config: config}
     )
 

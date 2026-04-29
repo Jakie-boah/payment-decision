@@ -49,7 +49,7 @@ class PaymentPostgresRepository(Repository[Payment]):
         payment = rows.mappings().first()
 
         if not payment:
-            raise PaymentNotFoundError()
+            raise PaymentNotFoundError
 
         return map_payment_from_db(payment)
 

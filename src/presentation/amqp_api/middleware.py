@@ -21,7 +21,6 @@ class ErrorHandlingMiddleware(BaseMiddleware):
             try:
                 result = await call_next(msg)
                 await msg.ack()
-                return result
 
             except PaymentError:
                 if attempt == self.MAX_RETRIES:
@@ -29,4 +28,9 @@ class ErrorHandlingMiddleware(BaseMiddleware):
                     raise
 
                 await asyncio.sleep(2 ** attempt)
+
+            else:
+                return result
+
         return None
+

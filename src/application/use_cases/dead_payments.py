@@ -5,13 +5,15 @@ from src.application.interfaces.postgres.uow import UnitOfWork
 from src.domain.entities.outbox import Outbox
 from src.domain.entities.payment import Payment
 from src.domain.mapper import map_outbox_from_payload
+from src.application.interfaces.webhook.call import WebhookService
 
 
 class DeadPaymentUseCase:
 
-    def __init__(self, uow: UnitOfWork, logger: structlog.BoundLogger):
+    def __init__(self, uow: UnitOfWork, logger: structlog.BoundLogger, webhook_service: WebhookService):
         self.uow = uow
         self.logger = logger
+        self.webhook_service = webhook_service
 
     async def __call__(self, payload: OutboxPayload):
         self.logger.error("Payment failed")
@@ -27,3 +29,6 @@ class DeadPaymentUseCase:
         await self.uow.payment.update(payment)
         await self.uow.outbox.save(outbox)
         await self.uow.commit()
+
+
+        await self.webhook_service.process(outbox.payload, payment.webhook)

@@ -14,6 +14,7 @@ from src.infrastructure.ioc_container import (
     RabbitProvider,
     SessionProvider,
     UseCaseProvider,
+AioHttpProvider
 )
 from src.presentation.amqp_api.endpoints import router
 
@@ -24,6 +25,7 @@ async def application_factory():
     container = make_async_container(
         LoggerProvider(),
         SessionProvider(),
+        AioHttpProvider(),
         RabbitProvider(),
         PaymentProvider(),
         UseCaseProvider(),

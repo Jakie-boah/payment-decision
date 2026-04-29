@@ -13,7 +13,7 @@ router = RabbitRouter(prefix="")
 
 @router.subscriber(
     queue=RabbitQueue(
-        name="payment-queue",
+        name="payments.new",
         durable=True,
         queue_type=QueueType.QUORUM,
         arguments={

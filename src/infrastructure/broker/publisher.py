@@ -1,5 +1,3 @@
-from dataclasses import asdict
-
 import structlog
 from faststream.rabbit import RabbitBroker
 
@@ -17,6 +15,5 @@ class ImplPublisher(Publisher):
         payload = outbox.convert_to_payload()
         await self.broker.publish(
             payload,
-            queue="payment-queue",
+            queue="payments.new",
         )
-        self.logger.info(f"ОТпавил все гонво {asdict(payload)}")

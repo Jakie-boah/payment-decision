@@ -6,6 +6,7 @@ from src.application.interfaces.postgres.uow import UnitOfWork
 from src.domain.entities.outbox import Outbox
 from src.domain.entities.payment import Payment
 from src.domain.mapper import map_outbox_from_payload
+from src.application.interfaces.webhook.call import WebhookService
 
 
 class PaymentUseCase:
@@ -14,10 +15,13 @@ class PaymentUseCase:
             logger: structlog.BoundLogger,
             payment_service: PaymentService,
             uow: UnitOfWork,
+            webhook_service: WebhookService
     ):
         self.logger = logger
         self.payment_service = payment_service
         self.uow = uow
+        self.webhook_service = webhook_service
+
 
     async def __call__(self, payload: OutboxPayload):
 
@@ -36,3 +40,5 @@ class PaymentUseCase:
         await self.uow.outbox.save(outbox)
 
         await self.uow.commit()
+
+        await self.webhook_service.process(outbox.payload, payment.webhook)

@@ -1,3 +1,4 @@
+import asyncio
 import random
 
 import structlog
@@ -13,8 +14,10 @@ class ImplPaymentService(PaymentService):
 
     async def process(self, payment: Payment):
 
+        await asyncio.sleep(random.randint(2, 6))
+
         choice = random.randint(1, 10)
 
         if choice == 1:
-            raise PaymentError()
+            raise PaymentError
 

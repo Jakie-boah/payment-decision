@@ -83,8 +83,6 @@ class Payment:
         self._status = Status.PENDING
 
     def get_outbox(self) -> Outbox:
-        # if self.__outbox:
-        #     return self.__outbox
 
         self.__outbox = Outbox(
             aggregate_id=self.id,

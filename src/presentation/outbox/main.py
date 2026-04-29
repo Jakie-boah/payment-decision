@@ -11,6 +11,7 @@ from src.infrastructure.ioc_container import (
     RabbitProvider,
     SessionProvider,
     UseCaseProvider,
+AioHttpProvider
 )
 
 
@@ -20,6 +21,7 @@ def create_container(config: Config) -> AsyncContainer:
         SessionProvider(),
         RabbitProvider(),
         PaymentProvider(),
+        AioHttpProvider(),
         UseCaseProvider(),
         context={Config: config}
     )
