@@ -3,10 +3,10 @@ import structlog
 from src.application.dto.amqp import OutboxPayload
 from src.application.interfaces.payment.service import PaymentService
 from src.application.interfaces.postgres.uow import UnitOfWork
+from src.application.interfaces.webhook.call import WebhookService
 from src.domain.entities.outbox import Outbox
 from src.domain.entities.payment import Payment
 from src.domain.mapper import map_outbox_from_payload
-from src.application.interfaces.webhook.call import WebhookService
 
 
 class PaymentUseCase:

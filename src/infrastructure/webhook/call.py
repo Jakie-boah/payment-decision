@@ -1,7 +1,8 @@
 import structlog
 from aiohttp import ClientSession
-from src.domain.values.strings import Webhook
+
 from src.application.interfaces.webhook.call import WebhookService
+from src.domain.values.strings import Webhook
 
 
 class ImplWebhookService(WebhookService):

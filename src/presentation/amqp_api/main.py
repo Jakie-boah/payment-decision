@@ -9,12 +9,12 @@ from faststream.rabbit import RabbitBroker
 from src.infrastructure.config.config_loader import load_config_from_env
 from src.infrastructure.config.config_storage import Config
 from src.infrastructure.ioc_container import (
+    AioHttpProvider,
     LoggerProvider,
     PaymentProvider,
     RabbitProvider,
     SessionProvider,
     UseCaseProvider,
-AioHttpProvider
 )
 from src.presentation.amqp_api.endpoints import router
 
