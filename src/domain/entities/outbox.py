@@ -14,7 +14,7 @@ class Outbox:
             idempotency_key: IdempotencyKey,
             created_at: datetime,
             processed_at: datetime | None = None,
-            pk: int = None
+            pk: int | None = None
     ):
         self._pk = pk
         self.aggregate_id = aggregate_id

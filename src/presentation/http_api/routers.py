@@ -3,8 +3,7 @@ from uuid import UUID
 
 from dishka import FromDishka
 from dishka.integrations.fastapi import inject
-from fastapi import APIRouter
-from fastapi.params import Header
+from fastapi import APIRouter, Header
 
 from src.application.dto.payment import NewPayment, PaymentRequest, Result
 from src.application.interfaces.postgres.reader import Payment, PaymentReader
@@ -24,6 +23,7 @@ async def payments(
         idempotency_key: Annotated[str, Header()],
         use_case: FromDishka[CreatePaymentUseCase]
 ) -> Result:
+    use_case.logger.info(idempotency_key)
     payload = NewPayment(
         idempotency_key=UUID(idempotency_key),
         amount=payload.amount,
@@ -36,7 +36,7 @@ async def payments(
     return await use_case(payload)
 
 
-@router.post("/payments/{uid}")
+@router.get("/payments/{uid}")
 @inject
 async def get_payment(uid: UUID, reader: FromDishka[PaymentReader]) -> Payment:
     return await reader.get_payment_by_id(uid=Id(uid))

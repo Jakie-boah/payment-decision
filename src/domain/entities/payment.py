@@ -20,7 +20,7 @@ class Payment:
             uid: Id = None,
             description: Description = None,
             meta_data: dict | None = None,
-            created_at: datetime = None,
+            created_at: datetime | None = None,
             status: Status = Status.NOT_SET,
     ):
         self._id = uid or Id.generate()
