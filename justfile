@@ -17,3 +17,11 @@ test-down:
 
 ruff:
     ruff check --config pyproject.toml --fix
+
+
+up:
+   docker compose up -d && docker exec api uv run alembic upgrade head
+
+
+down:
+    docker compose down

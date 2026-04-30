@@ -1,5 +1,6 @@
 import asyncio
 
+import structlog
 from dishka import AsyncContainer, make_async_container
 
 from src.application.use_cases.publish_payments import PublishPaymentsUseCase
@@ -31,15 +32,22 @@ async def monitor():
     config = load_config_from_env()
 
     while True:
+        try:
 
-        container = create_container(config)
+            container = create_container(config)
 
-        async with container() as req:
-            use_case = await req.get(PublishPaymentsUseCase)
-            await use_case()
+            async with container() as req:
+                use_case = await req.get(PublishPaymentsUseCase)
+                await use_case()
 
-        await container.close()
-        await asyncio.sleep(5)
+            await container.close()
+
+        except Exception as e:
+            logger = await container.get(structlog.BoundLogger)
+            logger.error(e)
+
+        finally:
+            await asyncio.sleep(5)
 
 
 if __name__ == "__main__":
