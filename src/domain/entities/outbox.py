@@ -35,16 +35,6 @@ class Outbox:
     def mark_as_processed(self):
         self._processed_at = datetime.now(UTC)
 
-    def convert_to_dict(self) -> dict[str, str]:
-        return {
-            "aggregate_id": self.aggregate_id.as_generic(),
-            "event_type": self.event_type,
-            "idempotency_key": self.idempotency_key.as_generic(),
-            "payload": self.payload,
-            "created_at": self.created_at.isoformat(),
-            "processed_at": self._processed_at.isoformat() if self._processed_at else None,
-        }
-
     def convert_to_payload(self) -> OutboxPayload:
         return OutboxPayload(
             aggregate_id=self.aggregate_id.as_generic(),

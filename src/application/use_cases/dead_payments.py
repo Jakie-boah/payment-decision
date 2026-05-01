@@ -31,4 +31,4 @@ class DeadPaymentUseCase:
         await self.uow.commit()
 
 
-        await self.webhook_service.process(outbox.payload, payment.webhook)
+        await self.webhook_service.process(payload=outbox.payload, webhook=payment.webhook)

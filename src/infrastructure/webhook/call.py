@@ -15,7 +15,7 @@ class ImplWebhookService(WebhookService):
         self.http_session = http_session
         self.logger = logger
 
-    async def get_feed(self, *, payload: dict[str, str], webhook: Webhook):
+    async def process(self, *, payload: dict[str, str], webhook: Webhook):
         async with self.http_session.request(
                 "POST", webhook.value, json=payload, timeout=10
         ) as resp:

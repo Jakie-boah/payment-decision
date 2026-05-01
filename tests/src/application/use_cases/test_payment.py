@@ -33,7 +33,8 @@ async def test_payment_success(create_payment, use_case, session, uow, logger):
     outbox = payment.get_outbox()
 
     with patch("src.infrastructure.payment.payment.random.randint", return_value=2):
-        await use_case(outbox.convert_to_payload())
+        with patch("src.infrastructure.webhook.call.ImplWebhookService.process", return_value=None):
+            await use_case(outbox.convert_to_payload())
 
     await session.close()
 
@@ -70,7 +71,8 @@ async def test_payment_failure(create_payment, dead_use_case, session, uow, logg
 
     outbox = payment.get_outbox()
 
-    await dead_use_case(outbox.convert_to_payload())
+    with patch("src.infrastructure.webhook.call.ImplWebhookService.process", return_value=None):
+        await dead_use_case(outbox.convert_to_payload())
 
     await session.close()
 
